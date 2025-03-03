@@ -18,12 +18,12 @@ data "aws_availability_zones" "available" {
 
 
 module "networking" {
-  source             = "./networking"
+  source             = "./modules/networking"
   availability_zones = data.aws_availability_zones.available.names
 }
 
 module "ec2" {
-  source            = "./ec2"
+  source            = "./modules/ec2"
   instance_type     = var.instance_type
   subnet_id         = module.networking.public_subnet_ids[0]
   web_sg_id         = module.networking.web_sg_id
@@ -35,7 +35,7 @@ module "ec2" {
 
 
 module "rds" {
-  source                = "./rds"
+  source                = "./modules/rds"
   wordpress_db_name     = var.wordpress_db_name
   wordpress_db_user     = var.wordpress_db_user
   wordpress_db_password = var.wordpress_db_password
@@ -45,7 +45,7 @@ module "rds" {
 }
 
 module "ebs" {
-  source            = "./ebs"
+  source            = "./modules/ebs"
   availability_zone = data.aws_availability_zones.available.names[0]
   instance_id       = module.ec2.instance_id
 }
